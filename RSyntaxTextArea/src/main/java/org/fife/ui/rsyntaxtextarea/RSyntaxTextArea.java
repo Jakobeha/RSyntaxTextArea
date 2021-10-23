@@ -1856,8 +1856,17 @@ private boolean fractionalFontMetricsEnabled;
 	 *
 	 * @return The painter to use for rendering tokens.
 	 */
-	TokenPainter getTokenPainter() {
+	public TokenPainter getTokenPainter() {
 		return tokenPainter;
+	}
+
+
+	/**
+	 * Sets the painter to use for rendering tokens
+	 */
+	public void setTokenPainter(TokenPainter tokenPainter) {
+		this.tokenPainter = tokenPainter;
+		repaint();
 	}
 
 
@@ -3200,8 +3209,7 @@ private boolean fractionalFontMetricsEnabled;
 	public void setWhitespaceVisible(boolean visible) {
 		if (whitespaceVisible!=visible) {
 			this.whitespaceVisible = visible;
-			tokenPainter = visible ? new VisibleWhitespaceTokenPainter() :
-					new DefaultTokenPainter();
+			tokenPainter.setPaintWhitespace(visible);
 			repaint();
 			firePropertyChange(VISIBLE_WHITESPACE_PROPERTY, !visible, visible);
 		}

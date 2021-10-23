@@ -22,7 +22,7 @@ import javax.swing.text.TabExpander;
  * @author Robert Futrell
  * @version 1.0
  */
-class DefaultTokenPainter implements TokenPainter {
+public class DefaultTokenPainter implements TokenPainter {
 
 	/**
 	 * Rectangle used for filling token backgrounds.
@@ -36,11 +36,22 @@ class DefaultTokenPainter implements TokenPainter {
 	 */
 	private static char[] tabBuf;
 
+	private boolean paintWhitespace = false;
 
-	DefaultTokenPainter() {
+	public DefaultTokenPainter() {
 		bgRect = new Rectangle2D.Float();
 	}
 
+
+	@Override
+	public boolean getPaintWhitespace() {
+		return paintWhitespace;
+	}
+
+	@Override
+	public void setPaintWhitespace(boolean paintWhitespace) {
+		this.paintWhitespace = paintWhitespace;
+	}
 
 	@Override
 	public final float paint(Token token, Graphics2D g, float x, float y,
@@ -107,26 +118,109 @@ class DefaultTokenPainter implements TokenPainter {
 		g.setFont(host.getFontForTokenType(token.getType()));
 		FontMetrics fm = host.getFontMetricsForTokenType(token.getType());
 
-		for (int i=textOffs; i<end; i++) {
-			switch (text[i]) {
-				case '\t':
-					nextX = e.nextTabStop(
-						x + fm.charsWidth(text, flushIndex,flushLen), 0);
-					if (bg!=null) {
-						paintBackground(x,y, nextX-x,fm.getHeight(),
-									g, fm.getAscent(), host, bg);
-					}
-					if (flushLen > 0) {
+		if (paintWhitespace) {
+			int ascent = fm.getAscent();
+			int height = fm.getHeight();
+
+			for (int i = textOffs; i < end; i++) {
+				switch (text[i]) {
+					case '\t':
+
+						// Fill in background.
+						nextX = x + fm.charsWidth(text, flushIndex, flushLen);
+						float nextNextX = e.nextTabStop(nextX, 0);
+						if (bg != null) {
+							paintBackground(x, y, nextNextX - x, height, g,
+								ascent, host, bg);
+						}
 						g.setColor(fg);
-						g.drawChars(text, flushIndex, flushLen, (int)x,(int)y);
-						flushLen = 0;
-					}
-					flushIndex = i + 1;
-					x = nextX;
-					break;
-				default:
-					flushLen += 1;
-					break;
+
+						// Paint chars cached before the tab.
+						if (flushLen > 0) {
+							g.drawChars(text, flushIndex, flushLen, (int) x, (int) y);
+							flushLen = 0;
+						}
+						flushIndex = i + 1;
+
+						// Draw an arrow representing the tab.
+						int halfHeight = height / 2;
+						int quarterHeight = halfHeight / 2;
+						int ymid = (int) y - ascent + halfHeight;
+						g.drawLine((int) nextX, ymid, (int) nextNextX, ymid);
+						g.drawLine((int) nextNextX, ymid, (int) nextNextX - 4, ymid - quarterHeight);
+						g.drawLine((int) nextNextX, ymid, (int) nextNextX - 4, ymid + quarterHeight);
+
+						x = nextNextX;
+						break;
+
+					case ' ':
+
+						// NOTE:  There is a little bit of a "fudge factor"
+						// here when "smooth text" is enabled, as "width"
+						// below may well not be the width given to the space
+						// by fm.charsWidth() (it depends on how it places the
+						// space with respect to the preceding character).
+						// But, we assume the approximation is close enough for
+						// our drawing a dot for the space.
+
+						// "flushLen+1" ensures text is aligned correctly (or,
+						// aligned the same as in getWidth()).
+						nextX = x + fm.charsWidth(text, flushIndex, flushLen + 1);
+						int width = fm.charWidth(' ');
+
+						// Paint background.
+						if (bg != null) {
+							paintBackground(x, y, nextX - x, height, g,
+								ascent, host, bg);
+						}
+						g.setColor(fg);
+
+						// Paint chars before space.
+						if (flushLen > 0) {
+							g.drawChars(text, flushIndex, flushLen, (int) x, (int) y);
+							flushLen = 0;
+						}
+
+						// Paint a dot representing the space.
+						int dotX = (int) (nextX - width / 2f); // "2.0f" for FindBugs
+						int dotY = (int) (y - ascent + height / 2f); // Ditto
+						g.drawLine(dotX, dotY, dotX, dotY);
+						flushIndex = i + 1;
+						x = nextX;
+						break;
+
+
+					case '\f':
+						// ???
+						// fall-through for now.
+
+					default:
+						flushLen += 1;
+						break;
+				}
+			}
+		} else {
+			for (int i=textOffs; i<end; i++) {
+				switch (text[i]) {
+					case '\t':
+						nextX = e.nextTabStop(
+							x + fm.charsWidth(text, flushIndex, flushLen), 0);
+						if (bg != null) {
+							paintBackground(x, y, nextX - x, fm.getHeight(),
+								g, fm.getAscent(), host, bg);
+						}
+						if (flushLen > 0) {
+							g.setColor(fg);
+							g.drawChars(text, flushIndex, flushLen, (int) x, (int) y);
+							flushLen = 0;
+						}
+						flushIndex = i + 1;
+						x = nextX;
+						break;
+					default:
+						flushLen += 1;
+						break;
+				}
 			}
 		}
 

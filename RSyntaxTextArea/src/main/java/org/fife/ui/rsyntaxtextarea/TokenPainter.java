@@ -21,8 +21,16 @@ import javax.swing.text.TabExpander;
  * @author Robert Futrell
  * @version 1.0
  */
-interface TokenPainter {
+public interface TokenPainter {
+	/**
+	 * Whether to paint whitespace
+	 */
+	boolean getPaintWhitespace();
 
+	/**
+	 * Sets whether to paint whitespace
+	 */
+	void setPaintWhitespace(boolean paintWhitespace);
 
 	/**
 	 * Paints this token.
