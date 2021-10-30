@@ -756,7 +756,7 @@ public abstract class RTextAreaBase extends JTextArea {
 					currentCaretY = temp.y;
 				}
 			} catch (BadLocationException ble) {
-				ble.printStackTrace(); // Should never happen.
+				// ble.printStackTrace(); // Should never happen.
 			}
 		}
 

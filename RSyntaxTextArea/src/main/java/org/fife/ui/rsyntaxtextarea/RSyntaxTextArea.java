@@ -851,7 +851,7 @@ private boolean fractionalFontMetricsEnabled;
 
 				}
 			} catch (BadLocationException ble) {
-				ble.printStackTrace(); // Shouldn't happen.
+				// ble.printStackTrace(); // Shouldn't happen.
 			}
 		}
 		else if (bracketInfo.y==-1) {

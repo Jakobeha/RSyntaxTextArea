@@ -696,7 +696,7 @@ public class LineNumberList extends AbstractGutterComponent
 						repaint(); // *Could* be optimized...
 					}
 				} catch (BadLocationException ble) {
-					ble.printStackTrace();
+					// ble.printStackTrace();
 				}
 			}
 
