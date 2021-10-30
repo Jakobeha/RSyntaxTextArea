@@ -433,8 +433,7 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 	}
 
-
-	boolean insertBreakSpecialHandling(ActionEvent e) {
+	protected boolean insertBreakSpecialHandling(ActionEvent e) {
 		Action a = tokenMaker.getInsertBreakAction();
 		if (a!=null) {
 			a.actionPerformed(e);
@@ -529,6 +528,19 @@ public class RSyntaxDocument extends RDocument implements Iterable<Token>,
 
 	}
 
+	/**
+	 * Returns a char array containing the text at this line,
+	 * using the document's internal shared segment to reduce allocation
+	 */
+	protected CharSequence getTextOfLine(int line) {
+		setSharedSegment(line);
+		return s;
+	}
+
+	/** Returns the internal {@link TokenMaker} the document uses to generate tokens */
+	protected TokenMaker getTokenMaker() {
+		return tokenMaker;
+	}
 
 	/**
 	 * Sets the syntax style being used for syntax highlighting in this
