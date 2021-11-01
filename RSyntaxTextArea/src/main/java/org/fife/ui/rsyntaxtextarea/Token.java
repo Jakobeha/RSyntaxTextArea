@@ -34,7 +34,7 @@ import javax.swing.text.TabExpander;
  * @author Robert Futrell
  * @version 0.3
  */
-public interface Token extends TokenTypes {
+public interface Token extends TokenTypes, CharSequence {
 
 	/**
 	 * Appends HTML code for painting this token, using the given text area's

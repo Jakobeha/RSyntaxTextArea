@@ -28,6 +28,16 @@ public abstract class AbstractJFlexTokenMaker extends TokenMakerBase {
 	protected int start;		// Just for states.
 	protected int offsetShift;	// As parser always starts at 0, but our line doesn't.
 
+	/**
+	 * Constructor.
+	 */
+	public AbstractJFlexTokenMaker() {
+		super();
+	}
+
+	protected AbstractJFlexTokenMaker(TokenFactory tokenFactory) {
+		super(tokenFactory);
+	}
 
 	/**
 	 * Declared here so we can define overloads that refer to this method.

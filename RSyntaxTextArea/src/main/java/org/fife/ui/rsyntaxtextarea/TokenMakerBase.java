@@ -61,8 +61,12 @@ public abstract class TokenMakerBase implements TokenMaker {
 	 * Constructor.
 	 */
 	public TokenMakerBase() {
+		this(new DefaultTokenFactory());
+	}
+
+	protected TokenMakerBase(TokenFactory tokenFactory) {
 		firstToken = currentToken = previousToken = null;
-		tokenFactory = new DefaultTokenFactory();
+		this.tokenFactory = tokenFactory;
 	}
 
 

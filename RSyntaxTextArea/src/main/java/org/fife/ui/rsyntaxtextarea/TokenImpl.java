@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Rectangle;
+import java.nio.charset.Charset;
+import java.util.stream.IntStream;
 
 import javax.swing.text.Segment;
 import javax.swing.text.TabExpander;
@@ -952,5 +954,72 @@ public class TokenImpl implements Token {
 		   "]";
 	}
 
+	// region CharSequence implementation
 
+	@Override
+	public CharSequence subSequence(int start, int end) {
+		return new SubSequence(start, end);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return textCount == 0;
+	}
+
+	@Override
+	public IntStream chars() {
+		return IntStream.range(textOffset, textOffset + textCount).map(i -> text[i]);
+	}
+
+	@Override
+	public IntStream codePoints() {
+		// Idk how to do this
+		return getLexeme().codePoints();
+	}
+
+	private class SubSequence implements CharSequence {
+		private final int start;
+		private final int end;
+
+		SubSequence(int start, int end) {
+			this.start = start;
+			this.end = end;
+		}
+
+		@Override
+		public int length() {
+			return end - start;
+		}
+
+		@Override
+		public char charAt(int index) {
+			return TokenImpl.this.charAt(start + index);
+		}
+
+		@Override
+		public CharSequence subSequence(int start, int end) {
+			return new SubSequence(this.start + start, this.start + end);
+		}
+
+		@Override
+		public String toString() {
+			return TokenImpl.this + ".subSequence(" + start + ", " + end + ")";
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return start == end;
+		}
+
+		@Override
+		public IntStream chars() {
+			return IntStream.range(textOffset + start, textOffset + end).map(i -> text[i]);
+		}
+
+		@Override
+		public IntStream codePoints() {
+			return new String(text, textOffset + start, end - start).codePoints();
+		}
+	}
+	// endregion
 }
