@@ -84,9 +84,9 @@ public class SyntaxView extends View implements TabExpander,
 	 *
 	 * @param elem The element representing the text to display.
 	 */
-	public SyntaxView(Element elem) {
+	public SyntaxView(TokenMaker tokenMaker, Element elem) {
 		super(elem);
-		tempToken = new TokenImpl();
+		tempToken = tokenMaker.newFreeToken();
 	}
 
 

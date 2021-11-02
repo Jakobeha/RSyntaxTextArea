@@ -25,7 +25,8 @@ import javax.swing.text.Segment;
  * @version 0.2
  */
 public interface TokenMaker {
-
+	/** Creates a new token instance which is not added to the current linked list */
+	TokenImpl newFreeToken();
 
 	/**
 	 * Adds a null token to the end of the current linked list of tokens.

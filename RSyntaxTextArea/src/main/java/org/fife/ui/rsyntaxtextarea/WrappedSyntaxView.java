@@ -86,13 +86,13 @@ public class WrappedSyntaxView extends BoxView implements TabExpander,
 	 *
 	 * @param elem the element underlying the view
 	 */
-	public WrappedSyntaxView(Element elem) {
+	public WrappedSyntaxView(TokenMaker tokenMaker, Element elem) {
 		super(elem, Y_AXIS);
-		tempToken = new TokenImpl();
+		tempToken = tokenMaker.newFreeToken();
 		s = new Segment();
 		drawSeg = new Segment();
 		tempRect = new Rectangle();
-		lineCountTempToken = new TokenImpl();
+		lineCountTempToken = tokenMaker.newFreeToken();
 	}
 
 

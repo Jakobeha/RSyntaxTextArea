@@ -18,7 +18,11 @@ import javax.swing.text.Segment;
  * @version 0.1
  */
 public interface TokenFactory {
-
+	/**
+	 * Creates a new token separate from the tokens on each line, which does not get reset.
+	 * Subclasses can create override this to change the token class
+	 */
+	TokenImpl newFreeToken();
 
 	/**
 	 * Returns a null token.

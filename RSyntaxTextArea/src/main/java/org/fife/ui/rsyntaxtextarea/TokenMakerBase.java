@@ -69,6 +69,10 @@ public abstract class TokenMakerBase implements TokenMaker {
 		this.tokenFactory = tokenFactory;
 	}
 
+	@Override
+	public TokenImpl newFreeToken() {
+		return tokenFactory.newFreeToken();
+	}
 
 	@Override
 	public void addNullToken() {

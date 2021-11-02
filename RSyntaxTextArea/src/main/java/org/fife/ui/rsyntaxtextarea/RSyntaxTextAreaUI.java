@@ -67,12 +67,13 @@ public class RSyntaxTextAreaUI extends RTextAreaUI {
 		RTextArea c = getRTextArea();
 		if (c instanceof RSyntaxTextArea) {
 			RSyntaxTextArea area = (RSyntaxTextArea) c;
+			TokenMaker tokenMaker = ((RSyntaxDocument)area.getDocument()).getTokenMaker();
 			View v;
 			if (area.getLineWrap()) {
-				v = new WrappedSyntaxView(elem);
+				v = new WrappedSyntaxView(tokenMaker, elem);
 			}
 			else {
-				v = new SyntaxView(elem);
+				v = new SyntaxView(tokenMaker, elem);
 			}
 			return v;
 		}

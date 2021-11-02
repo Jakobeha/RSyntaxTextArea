@@ -63,7 +63,7 @@ public class DefaultTokenFactory implements TokenFactory {
 		// Give us some tokens to initially work with.
 		tokenList = new TokenImpl[size];
 		for (int i=0; i<size; i++) {
-			tokenList[i] = newToken();
+			tokenList[i] = newFreeToken();
 		}
 
 	}
@@ -79,14 +79,13 @@ public class DefaultTokenFactory implements TokenFactory {
 		size += increment;
 		tokenList = temp;
 		for (int i=0; i<increment; i++) {
-			tokenList[size-i-1] = newToken();
+			tokenList[size-i-1] = newFreeToken();
 		}
 		//System.err.println("... size up to: " + size);
 	}
 
-
-	/** Creates a new token instance. Subclasses can create override this to change the token class */
-	protected TokenImpl newToken() {
+	@Override
+	public TokenImpl newFreeToken() {
 		return new TokenImpl();
 	}
 
